@@ -1,4 +1,4 @@
-# Spring Boot Kafka Project (OBS Clone)
+# Spring Boot Kafka Project (OBS Test)
 
 This project is a microservices-based application using Spring Boot and Apache Kafka for asynchronous communication. It manages Items, Orders, and Inventory through a distributed system architecture.
 
