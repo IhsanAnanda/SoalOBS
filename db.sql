@@ -1,4 +1,3 @@
-
 CREATE DATABASE testDb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE testDb;
@@ -17,6 +16,7 @@ CREATE TABLE orders (
     CONSTRAINT fk_orders_item
         FOREIGN KEY (item_id)
         REFERENCES item(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE inventory (
@@ -27,6 +27,7 @@ CREATE TABLE inventory (
     CONSTRAINT fk_inventory_item
         FOREIGN KEY (item_id)
         REFERENCES item(id)
+        ON DELETE CASCADE
 );
 
 INSERT INTO item (id, name, price) VALUES
@@ -58,11 +59,36 @@ INSERT INTO inventory (id, item_id, qty, type) VALUES
 (5, 5, 45, 'T'),
 (6, 6, 5, 'T'),
 (7, 7, 25, 'T'),
-(8, 4, 7, 'T'),
+(8, 4, 7, 'T');
+
+INSERT INTO inventory (id, item_id, qty, type) VALUES
 (9, 5, 10, 'W');
+
+ALTER TABLE orders DROP FOREIGN KEY fk_orders_item;
+ALTER TABLE inventory DROP FOREIGN KEY fk_inventory_item;
+
+ALTER TABLE item MODIFY id INT NOT NULL AUTO_INCREMENT;
+ALTER TABLE inventory MODIFY id INT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE orders ADD CONSTRAINT fk_orders_item FOREIGN KEY (item_id) REFERENCES item(id) ON DELETE CASCADE;
+ALTER TABLE inventory ADD CONSTRAINT fk_inventory_item FOREIGN KEY (item_id) REFERENCES item(id) ON DELETE CASCADE;
 
 SELECT * FROM item;
 SELECT * FROM orders;
 SELECT * FROM inventory;
+
+SELECT
+    item_id,
+    SUM(
+        CASE
+            WHEN type = 'T' THEN qty
+            WHEN type = 'W' THEN -qty
+            ELSE 0
+        END
+    ) AS remaining_stock
+FROM inventory
+GROUP BY item_id;
+
+SELECT * FROM orders ORDER BY created_at DESC;
 
 
