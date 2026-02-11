@@ -1,2 +1,2 @@
 # SoalOBS
-Java Springboot with kafka
+Java Springboot with kafka (see master branch)
